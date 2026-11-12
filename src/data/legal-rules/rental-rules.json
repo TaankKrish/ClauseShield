@@ -1,0 +1,46 @@
+[
+  {
+    "id": "RULE-RENT-001",
+    "name": "Unilateral Deposit Forfeiture",
+    "category": "rental",
+    "riskLevel": "RED",
+    "pattern": "(forfeit|confiscate).*(entire|all|100%).*(deposit|advance)|deposit.*(shall not be refunded|non-refundable.*under any condition)",
+    "keywords": ["forfeit", "deposit", "non-refundable"],
+    "reason": "Unilateral total forfeiture of security deposit without genuine pre-estimate of damages acts as an unlawful penalty clause.",
+    "legalSource": "Indian Contract Act, 1872 - Section 74 (Penalty stipulations unenforceable without proof of actual damages)",
+    "caveat": "Landlord can deduct actual proven rent arrears or physical damages, but blanket forfeiture is legally challengeable."
+  },
+  {
+    "id": "RULE-RENT-002",
+    "name": "Arbitrary Landlord Entry Without Prior Notice",
+    "category": "rental",
+    "riskLevel": "RED",
+    "pattern": "enter.*(any time|without notice|at will|without prior permission)",
+    "keywords": ["enter", "any time", "without notice"],
+    "reason": "Clause grants unfettered right of entry, violating tenant quiet enjoyment and statutory privacy safeguards.",
+    "legalSource": "Model Tenancy Act, 2021 - Section 15 (Minimum 24 hours prior written/electronic notice required before entry)",
+    "caveat": "Emergency entry during structural peril or flood is permitted, but routine inspections require statutory prior notice."
+  },
+  {
+    "id": "RULE-RENT-003",
+    "name": "One-Sided Notice Period",
+    "category": "rental",
+    "riskLevel": "YELLOW",
+    "pattern": "tenant.*give.*(2|3|two|three).*months.*notice.*landlord.*(immediate|15 days|1 month)",
+    "keywords": ["notice period", "immediate", "vacate"],
+    "reason": "Unequal termination notice creates severe asymmetry favoring the landlord.",
+    "legalSource": "Transfer of Property Act, 1882 - Section 106",
+    "caveat": "Ensure notice periods are strictly mutual (typically 1 month for standard residential tenancies)."
+  },
+  {
+    "id": "RULE-RENT-004",
+    "name": "Standard Mutual 30-Day Notice",
+    "category": "rental",
+    "riskLevel": "GREEN",
+    "pattern": "(either party|both parties).*(give|serve).*(one month|30 days).*written notice",
+    "keywords": ["either party", "one month", "written notice"],
+    "reason": "Standard reciprocal exit clause protecting both tenant and owner fairly.",
+    "legalSource": "Model Tenancy Act, 2021 & Transfer of Property Act, 1882",
+    "caveat": "Standard statutory practice across all Indian states."
+  }
+]

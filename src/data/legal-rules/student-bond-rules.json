@@ -1,0 +1,24 @@
+[
+  {
+    "id": "RULE-BOND-001",
+    "name": "Absolute Non-Refundable Fee Forfeiture",
+    "category": "student_bond",
+    "riskLevel": "RED",
+    "pattern": "fee.*(non-refundable|cannot be claimed|forfeited in full).*even if.*(leaves|quits|discontinues)",
+    "keywords": ["non-refundable", "forfeited in full", "discontinues"],
+    "reason": "Complete retention of tuition fees for unrendered future educational services is declared an unfair trade practice by the Supreme Court of India.",
+    "legalSource": "Consumer Protection Act, 2019 & Supreme Court ruling in Islamic Academy of Education v. State of Karnataka (2003)",
+    "caveat": "Institutes can retain proportionate processing fees, but holding full multi-year fees is unlawful."
+  },
+  {
+    "id": "RULE-BOND-002",
+    "name": "Retention of Original Educational Certificates",
+    "category": "student_bond",
+    "riskLevel": "RED",
+    "pattern": "(original certificates|marksheets|degrees).*retained.*until.*paid|surrender original",
+    "keywords": ["original certificates", "retained", "marksheets"],
+    "reason": "Withholding original educational certificates as security or ransom is strictly prohibited under UGC and statutory guidelines.",
+    "legalSource": "UGC Notification on Refund of Fees and Non-retention of Original Certificates (Sec 5)",
+    "caveat": "Institutes may inspect originals for verification, but keeping custody is punishable."
+  }
+]

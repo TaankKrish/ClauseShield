@@ -1,0 +1,49 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node modules & dependencies
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment files - NEVER commit secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Editor and OS files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing coverage
+coverage
+*.lcov
+.nyc_output
+
+# Temporary & personal documents - NEVER commit uploaded citizen documents
+temp/
+tmp/
+uploads/
+*.pdf
+*.png
+*.jpg
+*.jpeg
+!public/demo-samples/*.pdf
+!public/demo-samples/*.png
+!public/demo-samples/*.jpg

@@ -1,0 +1,11 @@
+{
+  "documentId": "DOC-DEMO-RENTAL-01",
+  "title": "Standard Bengaluru Residential Lease Agreement",
+  "category": "rental",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "text": "RESIDENTIAL LEASE AGREEMENT\nThis Agreement of Lease is made on this 1st day of April, 2026 at Bengaluru by and between:\nLANDLORD: Mr. Ramesh Kumar, holding Aadhaar 4521 8832 9912 and PAN ABCDE1234F, Phone: +91 98765 43210.\nTENANT: Ms. Sneha Sharma, holding Aadhaar 9912 3344 5566, Email: sneha.sharma@example.com.\n1. RENT AND TERM: The tenancy shall be for 11 months from 1st April 2026 at monthly rent of Rs. 35,000/-.\n2. UNILATERAL FORFEITURE: If tenant vacates before 11 months, landlord shall forfeit the entire deposit of Rs. 2,00,000/- unconditionally.\n3. ENTRY AND INSPECTION: The Landlord reserves the right to enter and inspect the premises at any time without notice.\n4. RETURN OF DEPOSIT: Deposit refunded within 15 days of key handover."
+    }
+  ]
+}

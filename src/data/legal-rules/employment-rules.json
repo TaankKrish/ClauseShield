@@ -1,0 +1,24 @@
+[
+  {
+    "id": "RULE-EMP-001",
+    "name": "Post-Employment Non-Compete Restriction",
+    "category": "employment",
+    "riskLevel": "RED",
+    "pattern": "shall not (join|work with|be employed by).*competitor.*(after termination|after leaving|for a period of)",
+    "keywords": ["non-compete", "competitor", "after termination"],
+    "reason": "Agreements restraining an individual from exercising a lawful profession, trade, or business after leaving employment are void ab initio under Indian law.",
+    "legalSource": "Indian Contract Act, 1872 - Section 27 (Agreement in restraint of trade, void; Percept D'Mark v. Zaheer Khan, 2006 SC)",
+    "caveat": "Non-compete during active term of employment is valid; post-employment restraint is void under Indian law."
+  },
+  {
+    "id": "RULE-EMP-002",
+    "name": "Disproportionate Service Bond Penalty",
+    "category": "employment",
+    "riskLevel": "RED",
+    "pattern": "agrees to serve.*minimum.*(2|3|two|three).*years.*failing which.*pay.*(5,00,000|10,00,000|lakhs)",
+    "keywords": ["service bond", "minimum years", "failing which"],
+    "reason": "Employment bonds that demand exorbitant liquidated damages far exceeding actual demonstrable training expenditure are treated as unconstitutional bonded labor / illegal penalties.",
+    "legalSource": "Indian Contract Act, 1872 - Section 74 & Article 23 of the Constitution of India",
+    "caveat": "Employers can only recover actual, documented training expenses incurred on the employee, amortized by service."
+  }
+]
