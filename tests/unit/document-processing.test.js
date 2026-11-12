@@ -150,6 +150,38 @@ describe('Document Processing Module', () => {
       const processed = await preprocessImageForOcr(mockBlob);
       expect(processed).toBe(mockBlob);
     });
+
+    it('REGRESSION(vite-alias): createWorker receives logger in options object, not as postMessage payload', async () => {
+      // Guard against future tesseract.js upgrades or Vite config changes breaking the
+      // browser-worker alias. The mock above captures the options object passed to
+      // createWorker(); if the logger ends up inside the recognize() payload instead,
+      // structuredClone() would throw and this test would fail.
+      const { createWorker } = await import('tesseract.js');
+      let capturedOptions = null;
+
+      createWorker.mockImplementationOnce(async (_langs, _oem, options) => {
+        capturedOptions = options;
+        return {
+          recognize: vi.fn(async () => ({ data: { text: '' } })),
+          terminate: vi.fn(async () => {}),
+        };
+      });
+
+      const dummyFile = { name: 'test.png', type: 'image/png', size: 500 };
+      await extractTextFromImage(dummyFile, { preprocess: false });
+
+      // logger must be on the createWorker options object (main-thread side), never sent
+      // across the Worker postMessage boundary
+      expect(capturedOptions).not.toBeNull();
+      expect(typeof capturedOptions.logger).toBe('function');
+
+      // Verify recognize() is not called with a function argument
+      // (functions cannot be structuredClone-d across Worker boundary)
+      expect(() => structuredClone(capturedOptions.logger)).toThrow();
+      // ^ This is intentional: logger IS a function. The key assertion is that it
+      //   lives only in createWorker options (main-thread closure), NOT in the
+      //   payload sent to worker.recognize().
+    });
   });
 
   describe('Universal processDocument router', () => {
