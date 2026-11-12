@@ -1,47 +1,98 @@
 [
   {
     "id": "RULE-RENT-001",
-    "name": "Unilateral Deposit Forfeiture",
-    "category": "rental",
+    "name": "Unilateral Security Deposit Forfeiture",
+    "category": "security_deposit",
     "riskLevel": "RED",
-    "pattern": "(forfeit|confiscate).*(entire|all|100%).*(deposit|advance)|deposit.*(shall not be refunded|non-refundable.*under any condition)",
-    "keywords": ["forfeit", "deposit", "non-refundable"],
-    "reason": "Unilateral total forfeiture of security deposit without genuine pre-estimate of damages acts as an unlawful penalty clause.",
-    "legalSource": "Indian Contract Act, 1872 - Section 74 (Penalty stipulations unenforceable without proof of actual damages)",
-    "caveat": "Landlord can deduct actual proven rent arrears or physical damages, but blanket forfeiture is legally challengeable."
+    "description": "Unilateral total forfeiture of security deposit without genuine pre-estimate of damages.",
+    "patterns": [
+      "(?:forfeit|confiscate).*(?:entire|all|100%).*(?:deposit|advance)",
+      "deposit.*(?:shall not be refunded|non-refundable.*under any condition)"
+    ],
+    "legalSource": "Indian Contract Act, 1872 - Section 74 (Liquidated damages vs penalty stipulations; Kailash Nath Associates v. DDA, 2015 SC)",
+    "conditions": ["forfeit", "deposit"],
+    "explanation": "A clause providing for unconditional forfeiture of the entire deposit regardless of actual physical damages or unpaid rent acts as a punitive penalty stipulation, which is generally unenforceable under Section 74 of the Indian Contract Act.",
+    "caveat": "Landlords are entitled to deduct documented rent arrears or verified property repair costs, but absolute forfeiture without accounting requires legal scrutiny.",
+    "enabled": true
   },
   {
     "id": "RULE-RENT-002",
-    "name": "Arbitrary Landlord Entry Without Prior Notice",
-    "category": "rental",
+    "name": "Unannounced Landlord Entry Without Prior Notice",
+    "category": "tenant_privacy",
     "riskLevel": "RED",
-    "pattern": "enter.*(any time|without notice|at will|without prior permission)",
-    "keywords": ["enter", "any time", "without notice"],
-    "reason": "Clause grants unfettered right of entry, violating tenant quiet enjoyment and statutory privacy safeguards.",
-    "legalSource": "Model Tenancy Act, 2021 - Section 15 (Minimum 24 hours prior written/electronic notice required before entry)",
-    "caveat": "Emergency entry during structural peril or flood is permitted, but routine inspections require statutory prior notice."
+    "description": "Right of entry at any time without mandatory prior written or electronic notice.",
+    "patterns": [
+      "enter.*(?:any time|without notice|at will|without prior permission)",
+      "inspect.*(?:any time without notice|unannounced)"
+    ],
+    "legalSource": "Model Tenancy Act, 2021 - Section 15 (Minimum 24-hour prior written/electronic notice mandatory before entry)",
+    "conditions": ["enter", "without notice"],
+    "explanation": "Unfettered right of landlord entry infringes on the tenant's right to quiet enjoyment and conflicts with statutory prior-notice standards.",
+    "caveat": "Emergency entry during severe structural peril or environmental hazard is legally permissible; routine inspections require statutory advance notice.",
+    "enabled": true
   },
   {
     "id": "RULE-RENT-003",
-    "name": "One-Sided Notice Period",
-    "category": "rental",
-    "riskLevel": "YELLOW",
-    "pattern": "tenant.*give.*(2|3|two|three).*months.*notice.*landlord.*(immediate|15 days|1 month)",
-    "keywords": ["notice period", "immediate", "vacate"],
-    "reason": "Unequal termination notice creates severe asymmetry favoring the landlord.",
-    "legalSource": "Transfer of Property Act, 1882 - Section 106",
-    "caveat": "Ensure notice periods are strictly mutual (typically 1 month for standard residential tenancies)."
+    "name": "Inadequate or Unreasonable Eviction Notice",
+    "category": "eviction_notice",
+    "riskLevel": "RED",
+    "description": "Notice to vacate within unreasonably brief timeframes (e.g. 24 hours to 7 days).",
+    "patterns": [
+      "(?:vacate|evict|leave).*within\\s+(?:24\\s*hours|48\\s*hours|immediate|7\\s*days)",
+      "landlord.*(?:terminate|vacate).*(?:immediate|without notice)"
+    ],
+    "legalSource": "Transfer of Property Act, 1882 - Section 106 & Model Tenancy Act, 2021",
+    "conditions": ["vacate", "within"],
+    "explanation": "A provision requiring the tenant to vacate within 24 to 48 hours without formal default remediation provides inadequate time to seek alternative housing and may be legally challenged.",
+    "caveat": "Statutory notice periods vary based on whether eviction is for cause (e.g. persistent non-payment) or convenience.",
+    "enabled": true
   },
   {
     "id": "RULE-RENT-004",
+    "name": "One-Sided Notice Period Asymmetry",
+    "category": "termination_notice",
+    "riskLevel": "YELLOW",
+    "description": "Notice period asymmetry where tenant is bound to excessive notice while owner may terminate abruptly.",
+    "patterns": [
+      "tenant.*give.*(?:2|3|two|three).*months.*notice.*landlord.*(?:immediate|15 days|1 month)",
+      "tenant.*(?:3 months|90 days).*notice.*owner.*(?:15 days|immediate)"
+    ],
+    "legalSource": "Transfer of Property Act, 1882 - Section 106 & Indian Contract Act Principles of Mutuality",
+    "conditions": ["tenant", "notice", "landlord"],
+    "explanation": "Unequal termination notice terms create contractual imbalance favoring the property owner over the occupant.",
+    "caveat": "Commercial and residential lease norms differ; mutual 30-day notice is standard practice for residential tenancies.",
+    "enabled": true
+  },
+  {
+    "id": "RULE-RENT-005",
+    "name": "Unilateral or Discretionary Rent Escalation",
+    "category": "rent_escalation",
+    "riskLevel": "YELLOW",
+    "description": "Discretionary or uncalibrated rent hike without objective benchmark or mutually agreed cap.",
+    "patterns": [
+      "rent.*(?:increased|escalated).*at the sole discretion of the landlord",
+      "escalation.*(?:exceeding 15%|arbitrary)"
+    ],
+    "legalSource": "Model Tenancy Act, 2021 - Section 9 (Rent revision norms)",
+    "conditions": ["rent", "discretion"],
+    "explanation": "Discretionary rent increases allow arbitrary rent increases without mutual agreement during the tenancy term.",
+    "caveat": "Standard annual escalation typically ranges between 5% and 10% in major urban centers.",
+    "enabled": true
+  },
+  {
+    "id": "RULE-RENT-006",
     "name": "Standard Mutual 30-Day Notice",
-    "category": "rental",
+    "category": "termination_notice",
     "riskLevel": "GREEN",
-    "pattern": "(either party|both parties).*(give|serve).*(one month|30 days).*written notice",
-    "keywords": ["either party", "one month", "written notice"],
-    "reason": "Standard reciprocal exit clause protecting both tenant and owner fairly.",
+    "description": "Standard reciprocal 30-day written notice provision.",
+    "patterns": [
+      "(?:either party|both parties).*(?:give|serve).*(?:one month|30 days).*written notice",
+      "mutual.*(?:one month|30 days).*notice"
+    ],
     "legalSource": "Model Tenancy Act, 2021 & Transfer of Property Act, 1882",
-    "caveat": "Standard statutory practice across all Indian states."
+    "conditions": ["either party", "written notice"],
+    "explanation": "A reciprocal notice clause where either party may terminate upon 30 days prior written notice adheres to statutory fair contracting standards.",
+    "caveat": "Notice must be formally served in writing or electronic format according to agreement terms.",
+    "enabled": true
   }
 ]
-
