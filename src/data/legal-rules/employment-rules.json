@@ -2,24 +2,65 @@
   {
     "id": "RULE-EMP-001",
     "name": "Post-Employment Non-Compete Restriction",
-    "category": "employment",
+    "category": "non_compete",
     "riskLevel": "RED",
-    "pattern": "shall not (join|work with|be employed by).*competitor.*(after termination|after leaving|for a period of)",
-    "keywords": ["non-compete", "competitor", "after termination"],
-    "reason": "Agreements restraining an individual from exercising a lawful profession, trade, or business after leaving employment are void ab initio under Indian law.",
-    "legalSource": "Indian Contract Act, 1872 - Section 27 (Agreement in restraint of trade, void; Percept D'Mark v. Zaheer Khan, 2006 SC)",
-    "caveat": "Non-compete during active term of employment is valid; post-employment restraint is void under Indian law."
+    "description": "Covenant prohibiting employment with competitors following separation from employment.",
+    "patterns": [
+      "shall not (?:join|work with|be employed by).*competitor.*(?:after termination|after leaving|for a period of)",
+      "non-compete.*(?:after cessation|post employment|following departure)"
+    ],
+    "legalSource": "Indian Contract Act, 1872 - Section 27 (Agreement in restraint of trade is void ab initio; Percept D'Mark v. Zaheer Khan, 2006 SC)",
+    "conditions": ["non-compete", "competitor", "after termination"],
+    "explanation": "Any covenant restraining an individual from exercising a lawful profession, trade, or business after termination of employment is void under Section 27 of the Indian Contract Act.",
+    "caveat": "Non-compete covenants during active employment are legally enforceable; restraints extending beyond termination are void under Indian jurisprudence.",
+    "enabled": true
   },
   {
     "id": "RULE-EMP-002",
-    "name": "Disproportionate Service Bond Penalty",
-    "category": "employment",
+    "name": "Disproportionate Employment Bond Penalty",
+    "category": "service_bond",
     "riskLevel": "RED",
-    "pattern": "agrees to serve.*minimum.*(2|3|two|three).*years.*failing which.*pay.*(5,00,000|10,00,000|lakhs)",
-    "keywords": ["service bond", "minimum years", "failing which"],
-    "reason": "Employment bonds that demand exorbitant liquidated damages far exceeding actual demonstrable training expenditure are treated as unconstitutional bonded labor / illegal penalties.",
-    "legalSource": "Indian Contract Act, 1872 - Section 74 & Article 23 of the Constitution of India",
-    "caveat": "Employers can only recover actual, documented training expenses incurred on the employee, amortized by service."
+    "description": "Liquidated damages penalty in employment service bond exceeding actual demonstrable training expenses.",
+    "patterns": [
+      "agrees to serve.*minimum.*(?:2|3|two|three).*years.*failing which.*pay.*(?:5,00,000|10,00,000|lakhs)",
+      "bond.*failing which.*(?:liquidated damages|forfeit|penalty)"
+    ],
+    "legalSource": "Indian Contract Act, 1872 - Section 74 & Article 23 of the Constitution of India (Prohibition of bonded labor)",
+    "conditions": ["service", "minimum", "failing which"],
+    "explanation": "Service bonds stipulating exorbitant damages unrelated to actual documented training expenses act as an illegal penalty rather than legitimate compensation.",
+    "caveat": "Employers may recover actual, verifiable specialized training costs amortized across completed months of service.",
+    "enabled": true
+  },
+  {
+    "id": "RULE-EMP-003",
+    "name": "Excessive Notice Period Exceeding 90 Days",
+    "category": "notice_period",
+    "riskLevel": "YELLOW",
+    "description": "Unreasonably long mandatory notice period without buyout or early-release mechanisms.",
+    "patterns": [
+      "notice period.*(?:exceeding 3 months|4 months|6 months|180 days)",
+      "mandatory notice.*(?:6 months|half year)"
+    ],
+    "legalSource": "Industrial Disputes Act, 1847 & Model Standing Orders on Employment Terms",
+    "conditions": ["notice period", "months"],
+    "explanation": "Excessive notice periods without standard pay-in-lieu options restrict employee career mobility and may be considered an indirect restraint of trade.",
+    "caveat": "Key management personnel and specialized researchers may legitimately require longer transition windows than standard employees.",
+    "enabled": true
+  },
+  {
+    "id": "RULE-EMP-004",
+    "name": "Standard Mutual Notice with Salary in Lieu",
+    "category": "notice_period",
+    "riskLevel": "GREEN",
+    "description": "Standard mutual notice of 30 days or salary in lieu thereof.",
+    "patterns": [
+      "(?:either party|both parties).*(?:terminate|end employment).*(?:one month|30 days).*notice.*salary in lieu",
+      "one month written notice or payment of salary in lieu"
+    ],
+    "legalSource": "Standard Industrial Employment Norms & Indian Contract Act Principles of Mutuality",
+    "conditions": ["either party", "notice", "salary in lieu"],
+    "explanation": "A reciprocal notice clause allowing termination with 30 days notice or basic salary in lieu adheres to standard fair employment benchmarks.",
+    "caveat": "Statutory notice during probationary periods is typically shorter (e.g. 15 days).",
+    "enabled": true
   }
 ]
-

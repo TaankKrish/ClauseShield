@@ -6,19 +6,42 @@ import { StatusBanner } from '../components/dashboard/StatusBanner.jsx';
 import { Badge } from '../components/common/Badge.jsx';
 import { Button } from '../components/common/Button.jsx';
 import { Card } from '../components/common/Card.jsx';
+import { ClauseCard } from '../components/clauses/ClauseCard.jsx';
+import { ClauseDetailModal } from '../components/clauses/ClauseDetailModal.jsx';
+import { AgreementSummaryView } from '../components/dashboard/AgreementSummaryView.jsx';
+import { LawyerQuestionsView } from '../components/dashboard/LawyerQuestionsView.jsx';
+import { AiInsightsView } from '../components/dashboard/AiInsightsView.jsx';
+import { DocumentBriefingView } from '../components/dashboard/DocumentBriefingView.jsx';
 import { analyzeDocument } from '../services/analysis-orchestrator.js';
 import { speechService } from '../modules/speech/speech-synthesizer.js';
-import { Shield, Sparkles, Volume2, CheckCircle2 } from 'lucide-react';
+import { useGemini } from '../hooks/useGemini.js';
+import {
+  Shield,
+  Sparkles,
+  Volume2,
+  CheckCircle2,
+  FileText,
+  Scale,
+  Eye,
+  Compass,
+  Clock,
+} from 'lucide-react';
 
 export default function App() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressState, setProgressState] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [activeTab, setActiveTab] = useState('clauses'); // 'clauses' | 'briefing' | 'summary' | 'lawyer' | 'insights' | 'timeline'
   const [speaking, setSpeaking] = useState(false);
+  const [activeContractType, setActiveContractType] = useState('all');
 
-  const runAnalysis = async ({ rawText, file, contractType }) => {
+  const gemini = useGemini();
+
+  const runAnalysis = async ({ rawText, file, contractType = 'all' }) => {
     setIsAnalyzing(true);
+    setActiveContractType(contractType);
+    gemini.resetAll();
     setProgressState({ step: 'INIT', progress: 5, message: 'Starting local inspection...' });
 
     try {
@@ -29,6 +52,7 @@ export default function App() {
         onProgress: (p) => setProgressState(p),
       });
       setAnalysisResult(result);
+      setActiveTab('clauses');
     } catch (err) {
       console.error('Analysis failed:', err);
       alert('Inspection failed: ' + (err.message || 'Unknown error'));
@@ -60,6 +84,19 @@ export default function App() {
       onEnd: () => setSpeaking(false),
       onError: () => setSpeaking(false),
     });
+  };
+
+  const handleInspectWithGemini = (clause) => {
+    gemini.explainClause(clause, selectedLanguage);
+  };
+
+  const toggleLanguage = () => {
+    const nextLang = selectedLanguage === 'en' ? 'hi' : 'en';
+    setSelectedLanguage(nextLang);
+    // If modal is currently open with an explanation, re-fetch in new language
+    if (gemini.activeClause) {
+      gemini.explainClause(gemini.activeClause, nextLang);
+    }
   };
 
   return (
@@ -98,6 +135,10 @@ export default function App() {
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
               <span>Hindi & English Briefings</span>
             </span>
+            <span className="flex items-center space-x-1.5">
+              <Sparkles className="w-4 h-4 text-teal-400" />
+              <span>Gemini AI Plain-Language Explanations</span>
+            </span>
           </div>
         </div>
 
@@ -132,7 +173,7 @@ export default function App() {
               <div>
                 <h2 className="text-xl font-bold text-white flex items-center space-x-2">
                   <Shield className="w-5 h-5 text-emerald-400" />
-                  <span>Statutory Inspection Results</span>
+                  <span>Statutory Inspection & AI Intelligence</span>
                 </h2>
                 <p className="text-xs text-slate-400 mt-1">
                   Privacy Shield Redacted: <span className="text-emerald-400 font-semibold">{analysisResult.privacy.redactionCount} identifiers</span> (Aadhaar, PAN, phone).
@@ -142,7 +183,7 @@ export default function App() {
               <div className="flex items-center space-x-2">
                 <Button
                   variant="secondary"
-                  onClick={() => setSelectedLanguage(selectedLanguage === 'en' ? 'hi' : 'en')}
+                  onClick={toggleLanguage}
                   className="text-xs"
                 >
                   {selectedLanguage === 'en' ? '🌐 Language: EN' : '🌐 भाषा: हिन्दी'}
@@ -161,61 +202,192 @@ export default function App() {
 
             <StatusBanner summary={analysisResult.summary} />
 
-            {/* Clauses List */}
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-white">Segmented Clauses & Statutory Findings</h3>
-              {analysisResult.clauses.map((clause) => {
-                const badgeVariant =
-                  clause.riskLevel === 'RED'
-                    ? 'red'
-                    : clause.riskLevel === 'YELLOW'
-                    ? 'amber'
-                    : clause.riskLevel === 'GREEN'
-                    ? 'emerald'
-                    : 'slate';
+            {/* AI Capability Navigation Tabs */}
+            <div className="flex flex-wrap gap-2 border-b border-slate-800/80 pb-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab('clauses')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer ${
+                  activeTab === 'clauses'
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                }`}
+              >
+                <Shield className="w-3.5 h-3.5" />
+                <span>Clauses ({analysisResult.clauses.length})</span>
+              </button>
 
-                return (
-                  <Card key={clause.id} className="p-5 border-slate-800 hover:border-slate-700 transition-colors">
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs font-mono font-semibold text-slate-400 uppercase">
-                          {clause.clauseNumber || clause.id}
-                        </span>
-                        <Badge variant={badgeVariant}>{clause.riskLevel}</Badge>
-                      </div>
-                      {clause.ruleId && (
-                        <span className="text-[11px] font-mono text-slate-500">{clause.ruleId}</span>
-                      )}
-                    </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('briefing');
+                  if (!gemini.documentBriefing) {
+                    gemini.fetchDocumentBriefing(analysisResult.clauses, analysisResult.summary, selectedLanguage);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer ${
+                  activeTab === 'briefing'
+                    ? 'bg-teal-500/20 text-teal-400 border border-teal-500/40'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                }`}
+              >
+                <Compass className="w-3.5 h-3.5" />
+                <span>AI Briefing</span>
+              </button>
 
-                    <p className="text-sm text-slate-200 leading-relaxed font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 mb-3">
-                      {clause.sanitizedText}
-                    </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('summary');
+                  if (!gemini.agreementSummary) {
+                    gemini.fetchSummary(analysisResult.clauses, activeContractType, selectedLanguage);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer ${
+                  activeTab === 'summary'
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                }`}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>Agreement Summary</span>
+              </button>
 
-                    <div className="text-xs space-y-1.5">
-                      <p className="text-slate-300">
-                        <strong className="text-slate-400">Statutory Reason:</strong> {clause.reason}
-                      </p>
-                      {clause.legalSource && (
-                        <p className="text-slate-400">
-                          <strong className="text-slate-500">Legal Source:</strong> {clause.legalSource}
-                        </p>
-                      )}
-                      {clause.caveat && (
-                        <p className="text-amber-400/90 italic">
-                          <strong className="text-amber-500">Note:</strong> {clause.caveat}
-                        </p>
-                      )}
-                    </div>
-                  </Card>
-                );
-              })}
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('lawyer');
+                  if (!gemini.lawyerQuestions) {
+                    gemini.fetchLawyerQuestions(analysisResult.clauses, selectedLanguage);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer ${
+                  activeTab === 'lawyer'
+                    ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/40'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                }`}
+              >
+                <Scale className="w-3.5 h-3.5" />
+                <span>Lawyer Questions</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('insights');
+                  if (!gemini.aiInsights) {
+                    gemini.fetchAiInsights(analysisResult.clauses, selectedLanguage);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer ${
+                  activeTab === 'insights'
+                    ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                }`}
+              >
+                <Eye className="w-3.5 h-3.5" />
+                <span>AI Insights</span>
+              </button>
+
+              {analysisResult.timeline && analysisResult.timeline.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('timeline')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer ${
+                    activeTab === 'timeline'
+                      ? 'bg-slate-800 text-white border border-slate-700'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  }`}
+                >
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>Notice Deadlines ({analysisResult.timeline.length})</span>
+                </button>
+              )}
             </div>
 
-            {/* Timeline Highlights */}
-            {analysisResult.timeline && analysisResult.timeline.length > 0 && (
-              <div className="mt-8 border-t border-slate-800 pt-6">
-                <h3 className="text-base font-semibold text-white mb-3">Actionable Notice Deadlines & Commitments</h3>
+            {/* TAB CONTENT: 1. Clauses List */}
+            {activeTab === 'clauses' && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-semibold text-white">Segmented Clauses & Statutory Findings</h3>
+                  <span className="text-xs text-slate-400">
+                    Click &ldquo;Explain with AI&rdquo; on any clause to generate plain-language breakdown
+                  </span>
+                </div>
+
+                <div className="space-y-4">
+                  {analysisResult.clauses.map((clause) => (
+                    <ClauseCard
+                      key={clause.id}
+                      clause={clause}
+                      onInspectWithGemini={handleInspectWithGemini}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB CONTENT: 2. Executive Briefing */}
+            {activeTab === 'briefing' && (
+              <DocumentBriefingView
+                briefing={gemini.documentBriefing}
+                loading={gemini.loadingBriefing}
+                error={gemini.briefingError}
+                language={selectedLanguage}
+                onGenerate={() =>
+                  gemini.fetchDocumentBriefing(
+                    analysisResult.clauses,
+                    analysisResult.summary,
+                    selectedLanguage
+                  )
+                }
+              />
+            )}
+
+            {/* TAB CONTENT: 3. Agreement Summary */}
+            {activeTab === 'summary' && (
+              <AgreementSummaryView
+                summary={gemini.agreementSummary}
+                loading={gemini.loadingSummary}
+                error={gemini.summaryError}
+                onGenerate={() =>
+                  gemini.fetchSummary(
+                    analysisResult.clauses,
+                    activeContractType,
+                    selectedLanguage
+                  )
+                }
+              />
+            )}
+
+            {/* TAB CONTENT: 4. Lawyer Questions */}
+            {activeTab === 'lawyer' && (
+              <LawyerQuestionsView
+                lawyerQuestions={gemini.lawyerQuestions}
+                loading={gemini.loadingQuestions}
+                error={gemini.questionsError}
+                onGenerate={() =>
+                  gemini.fetchLawyerQuestions(analysisResult.clauses, selectedLanguage)
+                }
+              />
+            )}
+
+            {/* TAB CONTENT: 5. AI Insights */}
+            {activeTab === 'insights' && (
+              <AiInsightsView
+                aiInsights={gemini.aiInsights}
+                loading={gemini.loadingInsights}
+                error={gemini.insightsError}
+                onGenerate={() =>
+                  gemini.fetchAiInsights(analysisResult.clauses, selectedLanguage)
+                }
+              />
+            )}
+
+            {/* TAB CONTENT: 6. Timeline View */}
+            {activeTab === 'timeline' && analysisResult.timeline && (
+              <div className="space-y-3">
+                <h3 className="text-base font-semibold text-white">Actionable Notice Deadlines & Commitments</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {analysisResult.timeline.map((item) => (
                     <Card key={item.id} className="p-4 bg-slate-900/60 border-slate-800">
@@ -231,6 +403,18 @@ export default function App() {
               </div>
             )}
           </div>
+        )}
+
+        {/* Modal: Clause AI Explanation */}
+        {gemini.activeClause && (
+          <ClauseDetailModal
+            clause={gemini.activeClause}
+            explanation={gemini.clauseExplanation}
+            loading={gemini.loadingExplanation}
+            error={gemini.explanationError}
+            language={selectedLanguage}
+            onClose={gemini.closeExplanationModal}
+          />
         )}
       </main>
 

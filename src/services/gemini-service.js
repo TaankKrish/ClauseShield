@@ -1,7 +1,18 @@
-import { requestClauseExplanation, getOfflineFallbackExplanation } from './api-client.js';
+import {
+  requestClauseExplanation,
+  requestAgreementSummary,
+  requestLawyerQuestions,
+  requestAiInsights,
+  requestDocumentBriefing,
+  getOfflineFallbackExplanation,
+  getOfflineFallbackSummary,
+  getOfflineFallbackLawyerQuestions,
+  getOfflineFallbackInsights,
+  getOfflineFallbackBriefing,
+} from './api-client.js';
 
 /**
- * Service facade for Gemini intelligence queries.
+ * Service facade for Gemini AI intelligence queries.
  */
 export const geminiService = {
   /**
@@ -12,10 +23,37 @@ export const geminiService = {
   },
 
   /**
-   * Generates offline mock response for headless testing or disconnected operation.
+   * Summarize the entire agreement structure.
    */
-  getOfflineExplanation(clause, language = 'en') {
-    return getOfflineFallbackExplanation(clause, language);
+  async summarizeAgreement(clauses, contractType = 'all', language = 'en') {
+    return requestAgreementSummary(clauses, contractType, language);
   },
-};
 
+  /**
+   * Generate advocate consultation questions for flagged clauses.
+   */
+  async getLawyerQuestions(clauses, language = 'en') {
+    return requestLawyerQuestions(clauses, language);
+  },
+
+  /**
+   * Generate additional AI observations not covered by deterministic rules.
+   */
+  async getAiInsights(clauses, language = 'en') {
+    return requestAiInsights(clauses, language);
+  },
+
+  /**
+   * Generate an executive document briefing.
+   */
+  async getDocumentBriefing(clauses, summary = {}, language = 'en') {
+    return requestDocumentBriefing(clauses, summary, language);
+  },
+
+  // Offline mock accessors for testing or headless disconnected usage
+  getOfflineExplanation: getOfflineFallbackExplanation,
+  getOfflineSummary: getOfflineFallbackSummary,
+  getOfflineLawyerQuestions: getOfflineFallbackLawyerQuestions,
+  getOfflineInsights: getOfflineFallbackInsights,
+  getOfflineBriefing: getOfflineFallbackBriefing,
+};

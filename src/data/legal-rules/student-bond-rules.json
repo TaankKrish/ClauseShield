@@ -1,25 +1,66 @@
 [
   {
     "id": "RULE-BOND-001",
-    "name": "Absolute Non-Refundable Fee Forfeiture",
-    "category": "student_bond",
+    "name": "Absolute Non-Refundable Educational Fee Forfeiture",
+    "category": "tuition_refund",
     "riskLevel": "RED",
-    "pattern": "fee.*(non-refundable|cannot be claimed|forfeited in full).*even if.*(leaves|quits|discontinues)",
-    "keywords": ["non-refundable", "forfeited in full", "discontinues"],
-    "reason": "Complete retention of tuition fees for unrendered future educational services is declared an unfair trade practice by the Supreme Court of India.",
-    "legalSource": "Consumer Protection Act, 2019 & Supreme Court ruling in Islamic Academy of Education v. State of Karnataka (2003)",
-    "caveat": "Institutes can retain proportionate processing fees, but holding full multi-year fees is unlawful."
+    "description": "Blanket refusal to refund tuition fees for unrendered educational services upon student withdrawal.",
+    "patterns": [
+      "fee.*(?:non-refundable|cannot be claimed|forfeited in full).*even if.*(?:leaves|quits|discontinues)",
+      "(?:all fees paid|entire tuition).*(?:strictly non-refundable|not refundable under any circumstance)"
+    ],
+    "legalSource": "Consumer Protection Act, 2019 (Unfair Contract Terms) & Supreme Court in Islamic Academy of Education v. State of Karnataka (2003)",
+    "conditions": ["non-refundable", "fee"],
+    "explanation": "Retention of multi-year tuition fees for educational sessions a student did not attend constitutes an unfair trade practice under consumer protection jurisprudence.",
+    "caveat": "Educational institutions may deduct proportionate administrative or seat-booking fees, but holding full multi-year fees is legally contestable.",
+    "enabled": true
   },
   {
     "id": "RULE-BOND-002",
     "name": "Retention of Original Educational Certificates",
-    "category": "student_bond",
+    "category": "certificate_retention",
     "riskLevel": "RED",
-    "pattern": "(original certificates|marksheets|degrees).*retained.*until.*paid|surrender original",
-    "keywords": ["original certificates", "retained", "marksheets"],
-    "reason": "Withholding original educational certificates as security or ransom is strictly prohibited under UGC and statutory guidelines.",
-    "legalSource": "UGC Notification on Refund of Fees and Non-retention of Original Certificates (Sec 5)",
-    "caveat": "Institutes may inspect originals for verification, but keeping custody is punishable."
+    "description": "Retention of original marksheets or degrees as financial collateral.",
+    "patterns": [
+      "(?:original certificates|marksheets|degrees).*retained.*until.*paid",
+      "surrender original.*(?:certificates|marksheets)"
+    ],
+    "legalSource": "University Grants Commission (UGC) Guidelines on Refund of Fees and Non-retention of Original Certificates (Sec 5)",
+    "conditions": ["original certificates", "retained"],
+    "explanation": "Withholding original educational qualification certificates as security deposit or ransom is prohibited by statutory regulatory bodies.",
+    "caveat": "Institutes have the right to physically inspect originals for verification, but must return them immediately upon verification.",
+    "enabled": true
+  },
+  {
+    "id": "RULE-BOND-003",
+    "name": "Unilateral Batch or Faculty Reassignment",
+    "category": "service_terms",
+    "riskLevel": "YELLOW",
+    "description": "Unilateral right to alter promised batch timing, center location, or core faculty without student consent.",
+    "patterns": [
+      "(?:reserves unilateral right|sole discretion).*reassign.*(?:batch|faculty|center)",
+      "change.*(?:faculty|schedule|center).*without.*consent"
+    ],
+    "legalSource": "Consumer Protection Act, 2019 - Section 2(47) (Unfair Trade Practice)",
+    "conditions": ["faculty", "batch", "without"],
+    "explanation": "Permitting arbitrary changes to teaching personnel or timings without recourse may constitute a deficiency in educational service.",
+    "caveat": "Reasonable schedule adjustments due to emergency or illness are standard; blanket discretionary rights warrant review.",
+    "enabled": true
+  },
+  {
+    "id": "RULE-BOND-004",
+    "name": "Pro-Rata Tuition Fee Refund Baseline",
+    "category": "tuition_refund",
+    "riskLevel": "GREEN",
+    "description": "Transparent pro-rata fee refund policy based on date of withdrawal.",
+    "patterns": [
+      "refund.*(?:pro-rata|proportionate).*(?:within 15 days|within 30 days)",
+      "fees refunded.*pro-rata basis"
+    ],
+    "legalSource": "UGC Fee Refund Norms & AICTE Educational Guidelines",
+    "conditions": ["refund", "pro-rata"],
+    "explanation": "A policy that calculates refunds proportionately based on the formal withdrawal date reflects fair educational contracting.",
+    "caveat": "Processing fee deduction is customary and acceptable if clearly specified.",
+    "enabled": true
   }
 ]
-

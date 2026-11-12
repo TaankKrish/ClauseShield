@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { piiGuardMiddleware } from './middleware/pii-guard.js';
-import geminiRoutes from './routes/gemini.js';
+import aiRoutes from './routes/ai.js';
 
 dotenv.config();
 
@@ -18,12 +18,17 @@ app.get('/api/health', (_req, res) => {
     status: 'healthy',
     service: 'ClauseShield API Gateway',
     timestamp: new Date().toISOString(),
-    geminiConfigured: Boolean(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here'),
+    geminiConfigured: Boolean(
+      process.env.GEMINI_API_KEY &&
+      process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here' &&
+      process.env.GEMINI_API_KEY.trim().length > 0
+    ),
   });
 });
 
 // Guard all intelligence endpoints against unredacted PII leakage
-app.use('/api/gemini', piiGuardMiddleware, geminiRoutes);
+app.use('/api/ai', piiGuardMiddleware, aiRoutes);
+app.use('/api/gemini', piiGuardMiddleware, aiRoutes); // Backwards-compatible route prefix
 
 // Only listen if not running in test suite
 if (process.env.NODE_ENV !== 'test') {
@@ -33,4 +38,3 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export default app;
-
