@@ -13,14 +13,29 @@ import { processDocument } from '../../src/modules/document-processing/index.js'
 import { preprocessImageForOcr } from '../../src/modules/document-processing/image-preprocessor.js';
 import { createSyntheticPdfBuffer } from '../fixtures/synthetic-documents.js';
 
-// Mock tesseract.js worker in unit test environment to prevent external network language downloads
+// Mock tesseract.js worker enforcing structured-clone checks on recognize payload
+// to catch any regressions where functions are erroneously sent via Worker.postMessage
 vi.mock('tesseract.js', () => ({
-  createWorker: vi.fn(async () => ({
-    recognize: vi.fn(async () => ({
-      data: { text: 'Sample Agreement Clause: Deposit is non-refundable.' },
-    })),
-    terminate: vi.fn(async () => {}),
-  })),
+  createWorker: vi.fn(async (_langs, _oem, options) => {
+    return {
+      recognize: vi.fn(async (_image, opts, output) => {
+        // Enforce structuredClone: Web Worker postMessage cannot serialize functions
+        if (opts !== undefined) structuredClone(opts);
+        if (output !== undefined) structuredClone(output);
+
+        // Simulate progress emission via the logger configured in createWorker
+        if (options && typeof options.logger === 'function') {
+          options.logger({ status: 'recognizing text', progress: 0.5 });
+          options.logger({ status: 'recognizing text', progress: 1.0 });
+        }
+
+        return {
+          data: { text: 'Sample Agreement Clause: Deposit is non-refundable.' },
+        };
+      }),
+      terminate: vi.fn(async () => {}),
+    };
+  }),
 }));
 
 describe('Document Processing Module', () => {
@@ -112,6 +127,22 @@ describe('Document Processing Module', () => {
       expect(res.extractionMethod).toBe('tesseract');
       expect(res.success).toBe(true);
       expect(res.fullText).toContain('Deposit is non-refundable');
+    });
+
+    it('REGRESSION: configures logger in createWorker options and does not pass uncloneable functions to worker.recognize', async () => {
+      const dummyFile = { name: 'scanned_agreement.png', type: 'image/png', size: 1200 };
+      const progressHistory = [];
+
+      const res = await extractTextFromImage(dummyFile, {
+        fileName: 'scanned_agreement.png',
+        preprocess: false,
+        onProgress: (p) => progressHistory.push(p),
+      });
+
+      expect(res.success).toBe(true);
+      expect(res.fullText).toContain('Deposit is non-refundable');
+      // Verify progress reporting triggered by the worker logger callback
+      expect(progressHistory.some((p) => p.status.includes('Reading text lines'))).toBe(true);
     });
 
     it('image preprocessor safely passes through image source in headless environment', async () => {

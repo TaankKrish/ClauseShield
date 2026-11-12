@@ -96,17 +96,23 @@ export async function extractTextFromImage(imageSource, options = {}) {
     const { createWorker } = await import('tesseract.js');
     const lang = options.language || 'eng';
 
-    worker = await createWorker(lang);
-
-    onProgress({ percent: 50, status: 'Recognizing text in document scan...' });
-    const ret = await worker.recognize(processedSource, {}, {
+    // Tesseract.js v5/v6: Logger callback must be configured on createWorker (main thread),
+    // NOT passed inside worker.recognize() where postMessage fails to clone functions.
+    worker = await createWorker(lang, 1, {
       logger: (m) => {
+        if (!m || typeof m !== 'object') return;
         if (m.status === 'recognizing text' && typeof m.progress === 'number') {
           const currentPct = 50 + Math.round(m.progress * 45);
-          onProgress({ percent: Math.min(95, currentPct), status: `Reading text lines (${Math.round(m.progress * 100)}%)...` });
+          onProgress({
+            percent: Math.min(95, currentPct),
+            status: `Reading text lines (${Math.round(m.progress * 100)}%)...`,
+          });
         }
       },
     });
+
+    onProgress({ percent: 50, status: 'Recognizing text in document scan...' });
+    const ret = await worker.recognize(processedSource);
 
     const fullText = (ret.data && ret.data.text ? ret.data.text.trim() : '');
 
