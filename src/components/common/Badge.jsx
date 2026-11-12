@@ -16,3 +16,4 @@ export function Badge({ children, variant = 'slate', className = '' }) {
     </span>
   );
 }
+

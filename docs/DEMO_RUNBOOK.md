@@ -54,3 +54,4 @@
 - If the venue WiFi is slow or offline: The application runs with 100% offline rule evaluation and pre-cached Gemini explanation fallbacks.
 - Sample documents are pre-bundled in `public/demo-samples/sample-rental-agreement.json`.
 - A 1-click sample loader button is embedded on the welcome screen for zero-latency demo presentation.
+

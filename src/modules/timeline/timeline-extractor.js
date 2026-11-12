@@ -64,3 +64,4 @@ export function extractTimelineItems(evaluatedClauses) {
 
   return { items };
 }
+

@@ -66,3 +66,4 @@ describe('Deterministic Legal Rule Engine', () => {
     expect(result.summary.total).toBe(4);
   });
 });
+

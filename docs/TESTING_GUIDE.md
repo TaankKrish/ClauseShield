@@ -71,3 +71,4 @@ The privacy sanitizer must undergo adversarial testing against synthetic PII dat
 
 ### 3.5 Offline Resilience Testing
 - Disable network in tests to verify that the core rule engine, segmentation, and offline explanations execute successfully without throwing unhandled network exceptions.
+

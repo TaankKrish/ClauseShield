@@ -56,3 +56,4 @@ export async function explainClauseWithGemini(clause, language = 'en') {
     return JSON.parse(cleanText);
   }
 }
+

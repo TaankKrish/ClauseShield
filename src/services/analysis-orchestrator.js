@@ -60,3 +60,4 @@ export async function analyzeDocument({ file = null, rawText = '', contractType 
     timeline: timelineResult.items,
   };
 }
+

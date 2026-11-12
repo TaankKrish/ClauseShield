@@ -78,3 +78,4 @@ Instead of an opaque, hallucination-prone "AI lawyer", ClauseShield uses a **dua
 - Automated e-signing or digital contract drafting.
 - Multi-jurisdiction support outside Indian statutory frameworks.
 - Persistent user accounts, cloud databases, or document storage.
+

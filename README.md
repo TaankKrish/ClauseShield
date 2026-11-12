@@ -87,3 +87,4 @@ npm run build
 ## ⚖️ Legal Disclaimer
 
 ClauseShield is an educational, consultation-preparation tool and does not provide legal advice or legal representation. Always consult a certified legal advocate before signing any contract.
+

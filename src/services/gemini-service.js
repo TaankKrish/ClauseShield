@@ -18,3 +18,4 @@ export const geminiService = {
     return getOfflineFallbackExplanation(clause, language);
   },
 };
+

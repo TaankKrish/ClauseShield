@@ -22,3 +22,4 @@ router.post('/explain-clause', async (req, res) => {
 });
 
 export default router;
+

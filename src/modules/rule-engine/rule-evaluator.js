@@ -99,3 +99,4 @@ export function evaluateAllClauses(clauses, contractCategory = 'all') {
     summary,
   };
 }
+

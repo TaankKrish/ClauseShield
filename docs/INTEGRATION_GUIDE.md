@@ -91,3 +91,4 @@ Before merging feature branches into `main`:
 4. [ ] An unrecognized clause triggers `UNASSESSED` (never `GREEN`).
 5. [ ] Disconnecting internet still allows full rule engine evaluation and offline mock explanations.
 6. [ ] Clicking "Listen in Hindi" initiates Hindi speech synthesis.
+

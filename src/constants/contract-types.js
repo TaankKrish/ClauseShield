@@ -27,3 +27,4 @@ export const CONTRACT_TYPE_METADATA = Object.freeze({
     description: 'Inspect unilateral termination, arbitration jurisdiction, and liability waivers.',
   },
 });
+

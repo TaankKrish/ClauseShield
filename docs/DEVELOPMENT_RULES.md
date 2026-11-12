@@ -95,3 +95,4 @@ src/
 1. **No Backend Database Dependencies**: ClauseShield is stateless by design. Citizen data resides in browser memory and is discarded on tab closure.
 2. **Dependency Hygiene**: Do not introduce heavy dependencies or random npm packages without consulting Krish.
 3. **Strict Content Sanitization**: When rendering clause HTML or text, ensure text is rendered safely via React's default text escaping to prevent XSS.
+

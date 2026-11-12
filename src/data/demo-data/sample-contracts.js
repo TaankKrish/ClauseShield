@@ -62,3 +62,4 @@ And Employee: Priya Nair, PAN BCDPA9876K, Phone: +91 97654 32109, residing at DL
 
 4. NOTICE PERIOD: Either party may terminate employment by giving one month written notice or salary in lieu thereof.`
 };
+

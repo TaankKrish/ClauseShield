@@ -87,3 +87,4 @@ class SpeechSynthesizer {
 }
 
 export const speechService = new SpeechSynthesizer();
+

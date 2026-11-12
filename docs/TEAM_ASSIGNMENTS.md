@@ -104,3 +104,4 @@ main ─────────────┼── feature/gemini-integration
    npm run build
    ```
 4. If an interface update is required in `docs/MODULE_CONTRACTS.md`, Krish must be notified to approve the revision before branches diverge.
+

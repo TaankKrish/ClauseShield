@@ -41,3 +41,4 @@ export function VoiceBriefingControl({ clauses = [], language = 'en' }) {
     </Button>
   );
 }
+

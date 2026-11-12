@@ -186,3 +186,4 @@ Before any agent marks a task complete:
 2. Run `npm run test` and ensure all unit/integration tests pass.
 3. Run `npm run build` and ensure the production bundle compiles without warnings.
 4. Verify accessibility and responsive layout across mobile and desktop breakpoints.
+

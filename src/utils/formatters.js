@@ -13,3 +13,4 @@ export function formatRiskScore(summary) {
   const score = Math.round(((summary.red * 100 + summary.yellow * 40) / (summary.total * 100)) * 100);
   return Math.min(100, Math.max(0, score));
 }
+

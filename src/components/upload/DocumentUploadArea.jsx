@@ -101,3 +101,4 @@ export function DocumentUploadArea({ onSelectSample, onFileSelected, isAnalyzing
     </Card>
   );
 }
+

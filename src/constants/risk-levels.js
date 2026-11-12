@@ -35,3 +35,4 @@ export const RISK_METADATA = Object.freeze({
     description: 'No matching statutory rule found. Does not imply safe or dangerous.',
   },
 });
+

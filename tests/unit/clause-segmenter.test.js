@@ -33,3 +33,4 @@ This is the second paragraph specifying maintenance responsibilities and paintin
     expect(segmentDocumentClauses(null)).toEqual([]);
   });
 });
+

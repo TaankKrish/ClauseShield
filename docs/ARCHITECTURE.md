@@ -129,3 +129,4 @@
 | Redacted Clause Text | ✅ Yes | ✅ Yes (Session) | ✅ Yes |
 | Risk Rating (RED/YELLOW) | ✅ Yes | ✅ Yes | ✅ Yes (Context) |
 | Gemini API Key | ❌ NEVER | ✅ Server Only | N/A |
+
