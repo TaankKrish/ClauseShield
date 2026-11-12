@@ -8,3 +8,4 @@ import { segmentDocumentClauses } from './clause-segmenter.js';
 export {
   segmentDocumentClauses,
 };
+

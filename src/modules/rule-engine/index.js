@@ -10,3 +10,4 @@ export {
   evaluateAllClauses,
   RULE_CATALOG,
 };
+
